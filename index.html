@@ -1,45 +1,96 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expert Clean Services Bangalore</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #f4f7f6; padding: 20px; margin: 0; }
-        .container { background: white; padding: 40px 20px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); max-width: 500px; margin: auto; border-top: 10px solid #2e7d32; }
-        .logo-circle { width: 100px; height: 100px; background: #e8f5e9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 50px; }
-        h1 { color: #1b5e20; margin-bottom: 5px; font-size: 28px; text-transform: uppercase; }
-        .location { color: #666; font-size: 14px; margin-bottom: 25px; letter-spacing: 1px; }
-        .price-card { text-align: left; background: #fafafa; border-radius: 15px; padding: 20px; margin-bottom: 20px; border-left: 5px solid #4caf50; }
-        .price-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
-        .price-item:last-child { border-bottom: none; }
-        .price-item span { font-weight: 500; color: #333; }
-        .price-item b { color: #2e7d32; font-size: 18px; }
-        .btn-whatsapp { background: #25D366; color: white; padding: 20px; text-decoration: none; border-radius: 50px; display: block; font-weight: bold; font-size: 18px; margin-top: 30px; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); transition: 0.3s; }
-        .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(37, 211, 102, 0.3); }
-        .footer-text { margin-top: 30px; font-size: 12px; color: #999; }
-    </style>
-</head>
-<body>
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-    <div class="container">
-        <div class="logo-circle">🏠</div>
-        <h1>EXPERT CLEAN</h1>
-        <div class="location">BENGALURU | 8822485417</div>
-        
-        <p style="font-weight: bold; color: #444;">Ab Aapka Ghar Chamkega! ✨</p>
+void main() => runApp(IAFCleaningApp());
 
-        <div class="price-card">
-            <div class="price-item"><span>🏠 1 BHK Full Deep Clean</span> <b>₹2,999</b></div>
-            <div class="price-item"><span>🏢 2 BHK Full Deep Clean</span> <b>₹5,599</b></div>
-            <div class="price-item"><span>🍳 Kitchen Deep Clean</span> <b>₹1,499</b></div>
-            <div class="price-item"><span>🚿 Bathroom Cleaning</span> <b>₹599</b></div>
-        </div>
+class IAFCleaningApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primaryColor: Colors.blueAccent),
+      home: HomeScreen(),
+    );
+  }
+}
 
-        <a href="https://wa.me/918822485417?text=Hello Ahmed, mujhe cleaning service book karni hai" class="btn-whatsapp">WhatsApp Par Order Karein ✅</a>
-        
-        <div class="footer-text">Manager: Ahmed Mazumder</div>
-    </div>
+class HomeScreen extends StatelessWidget {
+  final String phoneNumber = "8822485417";
 
-</body>
-</html>
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("IAF Cleaning Services"),
+        backgroundColor: Colors.blueAccent,
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: Column(
+        children: [
+          // Banner ki jagah ek Sundar Info Box
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+            ),
+            child: Column(
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.cleaning_services, size: 40, color: Colors.blueAccent),
+                ),
+                SizedBox(height: 10),
+                Text("Ahmed Mazumder", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                Text("Contact: $phoneNumber", style: TextStyle(color: Colors.white70)),
+              ],
+            ),
+          ),
+          
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.all(15),
+              children: [
+                Text("Our Rates & Services", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                _serviceTile(Icons.home, "1 BHK Deep Cleaning", "2999", "1 Hall, 1 Bed, 1 Kitchen, 1 Bath"),
+                _serviceTile(Icons.apartment, "2 BHK Deep Cleaning", "5599", "1 Hall, 2 Bed, 1 Kitchen, 2 Bath"),
+                _serviceTile(Icons.weekend, "Sofa Cleaning", "999", "Deep Shampoo & Vacuum"),
+                _serviceTile(Icons.kitchen, "Kitchen Deep Cleaning", "1499", "Oil & Stain Removal"),
+                _serviceTile(Icons.clean_hands, "Bathroom Cleaning", "599", "Scrubbing & Sanitization"),
+              ],
+            ),
+          ),
+        ],
+      ),
+      // WhatsApp Booking Button
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => launchUrl(Uri.parse("https://wa.me/91$phoneNumber")),
+        label: Text("Book Now"),
+        icon: Icon(Icons.chat),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  Widget _serviceTile(IconData icon, String title, String price, String desc) {
+    return Card(
+      elevation: 2,
+      margin: EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        leading: Icon(icon, color: Colors.blueAccent, size: 30),
+        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(desc),
+        trailing: Text("₹$price", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16)),
+      ),
+    );
+  }
+}
